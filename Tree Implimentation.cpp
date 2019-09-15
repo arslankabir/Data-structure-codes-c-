@@ -1,5 +1,6 @@
 #include<iostream>
 #include<conio.h>
+#include<stdlib.h>
 using namespace std;
 class TreeNode
 {
@@ -45,48 +46,57 @@ class TreeNode
 };
 class queue
 {
-	TreeNode *arr[100];
-	int front,rear;
 	public:
-	queue()
-	{
-		front = rear = -1;
-	}	
-	bool isempty()
-	{
-		if(front==-1&&rear==-1)
-		return true;
-		else
-		return false;
-	}
-	void enqueue(TreeNode *data)
-	{
-		if(isempty())
+		TreeNode *arr[101];
+		int front,rear;
+
+		queue()
 		{
-			front = rear =0;
+			front=-1;
+			rear=-1;
 		}
-		else
+		bool isempty()
 		{
-			rear=rear+1;
+		 if(front==-1&&rear==-1|| front>rear)
+		 return true;
+		 else
+		 return false;
 		}
-		 arr[rear] =data;
-	}
-	TreeNode *dequeue()
-	{
-		if(!isempty())
+		void enqueue(TreeNode *data)
 		{
-			int q=front;
-			front=front+1;
-			return arr[q];
+			if(isempty())
+			{
+				front = rear =0 ;
+			}
+			else
+			{
+				rear= rear+1;
+			}
+			arr[rear]=data;
 		}
-	}
-	
+		TreeNode* dequeue()
+		{
+			if(isempty())
+			{
+				cout<<"\nERROR: queue is empty";
+				return 0;
+			}
+			else
+			{
+				int q=front;
+				front = front +1;
+				return arr[q];
+			}
+			
+		}
+		
+		
 };
-void level(TreeNode *treeNode);
-void level(TreeNode *treeNode)
+void level(TreeNode *treeNode) ;
+void level(TreeNode *treeNode) 
 {
 	queue q;
-	if( treeNode == NULL ) return;
+	    if( treeNode == NULL ) return;
     q.enqueue( treeNode);
     while( !q.isempty() ) 
     {
@@ -97,9 +107,12 @@ void level(TreeNode *treeNode)
         if(treeNode->getright() != NULL )
 			q.enqueue( treeNode->getright());
     }
-    cout << endl;
 
+	
+	
 }
+	
+
 void inorder(TreeNode *treeNode);
 void insert(TreeNode *root,int *info);
 void insert(TreeNode *root,int *info)
@@ -114,24 +127,25 @@ void insert(TreeNode *root,int *info)
 		if(*info<*(p->get()))
 		{
 			q=p->getleft();
-			
 		}
 		else
 		{
 			q=p->getright();
-			
 		}
-		
-}
+	}
 	if(*info==*(p->get()))
 	{
 		cout<<"it is a duplicate number:="<<*info<<endl;
 		delete newnode;
 	}
 	else if(*info<*(p->get()))
-	p->setleft(newnode);
+	{
+		p->setleft(newnode);
+	}
 	else
-	p->setright(newnode);
+	{
+		p->setright(newnode);
+	}
 }
 void inorder(TreeNode *treeNode)
 {
@@ -142,94 +156,22 @@ void inorder(TreeNode *treeNode)
 		inorder(treeNode->getright());
 	}
 }
-void preorder(TreeNode *treeNode);
-void preorder(TreeNode *treeNode)
+
+TreeNode *findMin(TreeNode *tree);
+TreeNode *findMin(TreeNode *tree)
 {
-	if(treeNode!=NULL)
-	{
-		cout<<"Element:="<<*(treeNode->get())<<endl;
-		preorder(treeNode->getleft());
-		preorder(treeNode->getright());
-	}
+    if( tree == NULL ) 
+        return NULL;
+    if( tree->getleft() == NULL ) 
+        return tree; 
+    return findMin( tree->getleft() );
 }
-void postorder(TreeNode *treeNode);
-void postorder(TreeNode *treeNode)
-{
-	if(treeNode!=NULL)
-	{
-		postorder(treeNode->getleft());
-		postorder(treeNode->getright());
-		cout<<"Element:="<<*(treeNode->get())<<endl;
-	}
-}
-void maximum_value(TreeNode *root);
-void maximum_value(TreeNode *root)
-{
-	TreeNode *e;
-	e=root;
-	while(e->getright()!=NULL)
-	{
-		e=e->getright();
-	}
-	cout<<"The Maximum Value is:="<<*(e->get())<<endl;
-}
-void minimum_value(TreeNode *root);
-void minimum_value(TreeNode *root)
-{
-	TreeNode *r;
-	r=root;
-	while(r->getleft()!=NULL)
-	{
-		r=r->getleft();
-	}
-	cout<<"The Minimum Value is:="<<*(r->get())<<endl;
-}
-TreeNode *remove(TreeNode *tree,int info)
-{
-	TreeNode *k;
-	int com=info-*(tree->get());
-	if(com<0)
-	{
-		k=remove(tree->getleft(),info);
-		tree->setleft(k);
-	}
-	else if(com>0)
-	{
-		k=remove(tree->getright(),info);
-		tree->setright(k);
-	}
-	else if(com=0)
-	{
-		TreeNode *ntd;
-		ntd=tree;
-		if(ntd->getleft()==NULL && ntd->getright()==NULL)
-		{
-			delete ntd;
-			tree=NULL;
-			return tree;
-		}
-	/*	else if(ntd->getleft()==NULL && )*/
-	}
-}
-void srch(TreeNode *root,int *data)
-{
-	TreeNode *p,*q;
-	p=q=root;
-	while(*data==*(root->get()))
-	{
-	if(*data<*(p->get()))
-	q=p->getleft();
-	else
-	q=p->getright();
-	}	
-cout<<"srched: "<<*(q->get());
-}
+
+
 int main()
 {
 	
-	
-	
-	int array[]={ 14, 15, 4, 9, 7, 18, 3, 5, 16,4, 20, 17, 
+	int array[]={ 14,15,4,1,2,5,6,8,10,11,12,13,7,18,3,5,16,4,20,17,18,19,
 			 9, 14,5, -1};
 			 TreeNode *root=new TreeNode();
 			 root->set(&array[0]);
@@ -241,45 +183,24 @@ int main()
 			 {
 			 
 			 cout<<"\nNow Choice order\n\n";
-			 cout<<"1 for preorder\n2 for inorder\n3 for postorder\n4 for maximum value\n5 for minimum value\n6 for delete\n7 for level:";
+			 cout<<"1 for preorder\n2 for inorder\n3 for levelorder\n";
 			 cout<<"Enter your choice:-\n";
 			 int b;
 			 cin>>b;
-			 if(b==1)
-			 {
-			 	
-			 preorder(root);	
-		}
-		else if(b==2)
+			 
+			 
+		 if(b==2)
 		{		
 			 inorder(root);
 		}
 		else if(b==3)
 		{
-					postorder(root);
-		}
-		else if(b==4)
-		{
-			maximum_value(root);
-		}
-		else if(b==5)
-		{
-			minimum_value(root);
-		}
-		else if(b==6)
-		{
-			int val;
-			cout<<"enter the value that u want to delete\n";
-			cin>>val;
-			remove(root,val);
-		}
-		else if(b==7)
-		{
 			level(root);
+			
 		}
 		else
 		{
-			cout<<"invalid entry\n";
+			cout<<"Invalid Entry\n";
 		}
 	}
 	getch();
